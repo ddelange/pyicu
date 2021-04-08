@@ -597,10 +597,12 @@ DECLARE_BY_VALUE_TYPE(FormattedNumber, t_formattednumber, FormattedValue,
 /* FormattedNumberRange */
 /* t_formattednumberrange declared in numberformat.h */
 
+#if U_ICU_VERSION_HEX <= VERSION_HEX(68, 0, 0)
 static PyObject *t_formattednumberrange_getFirstDecimal(
     t_formattednumberrange *self);
 static PyObject *t_formattednumberrange_getSecondDecimal(
     t_formattednumberrange *self);
+#endif
 static PyObject *t_formattednumberrange_getIdentityResult(
     t_formattednumberrange *self);
 #if U_ICU_VERSION_HEX >= VERSION_HEX(68, 0, 0)
@@ -609,8 +611,10 @@ static PyObject *t_formattednumberrange_getDecimalNumbers(
 #endif
 
 static PyMethodDef t_formattednumberrange_methods[] = {
+#if U_ICU_VERSION_HEX <= VERSION_HEX(68, 0, 0)
     DECLARE_METHOD(t_formattednumberrange, getFirstDecimal, METH_NOARGS),
     DECLARE_METHOD(t_formattednumberrange, getSecondDecimal, METH_NOARGS),
+#endif
     DECLARE_METHOD(t_formattednumberrange, getIdentityResult, METH_NOARGS),
 #if U_ICU_VERSION_HEX >= VERSION_HEX(68, 0, 0)
     DECLARE_METHOD(t_formattednumberrange, getDecimalNumbers, METH_NOARGS),
@@ -5208,6 +5212,7 @@ static PyObject *t_formattednumber_getOutputUnit(t_formattednumber *self)
 
 /* FormattedNumberRange */
 
+#if U_ICU_VERSION_HEX <= VERSION_HEX(68, 0, 0)
 static PyObject *t_formattednumberrange_getFirstDecimal(
     t_formattednumberrange *self)
 {
@@ -5227,6 +5232,7 @@ static PyObject *t_formattednumberrange_getSecondDecimal(
 
     return PyUnicode_FromUnicodeString(&u);
 }
+#endif
 
 static PyObject *t_formattednumberrange_getIdentityResult(
     t_formattednumberrange *self)
@@ -5408,6 +5414,11 @@ void _init_numberformat(PyObject *m)
 #if U_ICU_VERSION_HEX >= 0x04080000
     INSTALL_ENUM(UNumberFormatRoundingMode, "UNNECESSARY", UNUM_ROUND_UNNECESSARY);
 #endif
+#if U_ICU_VERSION_HEX >= VERSION_HEX(69, 0, 0)
+    INSTALL_ENUM(UNumberFormatRoundingMode, "HALF_CEILING", UNUM_ROUND_HALF_CEILING);
+    INSTALL_ENUM(UNumberFormatRoundingMode, "HALF_FLOOR", UNUM_ROUND_HALF_FLOOR);
+    INSTALL_ENUM(UNumberFormatRoundingMode, "HALF_ODD", UNUM_ROUND_HALF_ODD);
+#endif
 
     INSTALL_CONSTANTS_TYPE(UNumberFormatStyle, m);
     INSTALL_ENUM(UNumberFormatStyle, "PATTERN_DECIMAL", UNUM_PATTERN_DECIMAL);
@@ -5484,6 +5495,10 @@ void _init_numberformat(PyObject *m)
     INSTALL_ENUM(UNumberSignDisplay, "NEVER", UNUM_SIGN_NEVER);
     INSTALL_ENUM(UNumberSignDisplay, "ACCOUNTING", UNUM_SIGN_ACCOUNTING);
     INSTALL_ENUM(UNumberSignDisplay, "ACCOUNTING_ALWAYS", UNUM_SIGN_ACCOUNTING_ALWAYS);
+#if U_ICU_VERSION_HEX >= VERSION_HEX(69, 0, 0)
+    INSTALL_ENUM(UNumberSignDisplay, "ACCOUNTING_NEGATIVE", UNUM_SIGN_ACCOUNTING_NEGATIVE);
+    INSTALL_ENUM(UNumberSignDisplay, "NEGATIVE", UNUM_SIGN_NEGATIVE);
+#endif
 
     INSTALL_CONSTANTS_TYPE(UNumberDecimalSeparatorDisplay, m);
     INSTALL_ENUM(UNumberDecimalSeparatorDisplay, "AUTO", UNUM_DECIMAL_SEPARATOR_AUTO);
